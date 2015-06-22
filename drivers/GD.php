@@ -3,7 +3,7 @@
 namespace mervick\image\drivers;
 
 use mervick\image\Driver;
-use mervick\image\DriverInterface;
+use mervick\image\Image;
 
 /**
  * GD driver.
@@ -196,7 +196,7 @@ class GD extends Driver
     }
 
     /**
-     * Crop image.
+     * Crop the image.
      * @param integer $width New width
      * @param integer $height New height
      * @param integer $offset_x Offset from left
@@ -206,8 +206,7 @@ class GD extends Driver
     {
         $image = $this->create($width, $height);
 
-        if (imagecopyresampled($image, $this->image, 0, 0, $offset_x, $offset_y, $width, $height, $width, $height))
-        {
+        if (imagecopyresampled($image, $this->image, 0, 0, $offset_x, $offset_y, $width, $height, $width, $height)) {
             imagedestroy($this->image);
             $this->image = $image;
             $this->width  = imagesx($image);
@@ -236,13 +235,13 @@ class GD extends Driver
 
     /**
      * Flip the image.
-     * @param string $direction May be Driver::HORIZONTAL or Driver::VERTICAL
+     * @param string $direction May be Image::HORIZONTAL or Image::VERTICAL
      */
     protected function _flip($direction)
     {
         $image = $this->_create($this->width, $this->height);
 
-        if ($direction === Driver::HORIZONTAL) {
+        if ($direction === Image::HORIZONTAL) {
             for ($x = 0; $x < $this->width; $x++) {
                 imagecopy($image, $this->image, $x, 0, $this->width - $x - 1, 0, 1, $this->height);
             }

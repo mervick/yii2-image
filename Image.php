@@ -9,6 +9,20 @@ namespace mervick\image;
  */
 class Image
 {
+    // Resizing constants
+    const WIDTH   = 'width';
+    const HEIGHT  = 'height';
+    const AUTO    = 'auto';
+    const INVERSE = 'inverse';
+    const PRECISE = 'precise';
+    const ADAPT   = 'adapt';
+    const CROP    = 'crop';
+
+    // Flipping constants
+    const HORIZONTAL = 'horizontal';
+    const VERTICAL = 'vertical';
+
+
     /**
      * Load image from file.
      * @param string $file File path

@@ -59,6 +59,8 @@ class GD extends Driver
             if ($throwsErrors) {
                 throw new \InvalidParamException($this->error);
             }
+        } else {
+            imagesavealpha($this->image, true);
         }
     }
 
@@ -70,6 +72,21 @@ class GD extends Driver
         if (is_resource($this->image)) {
             imagedestroy($this->image);
         }
+    }
+
+    /**
+     * Create empty image.
+     * @param integer $width
+     * @param integer $height
+     * @return resource
+     */
+    protected function create($width, $height)
+    {
+        $image = imagecreatetruecolor($width, $height);
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+
+        return $image;
     }
 
     /**
@@ -110,6 +127,39 @@ class GD extends Driver
         }
 
         return $format;
+    }
+
+    protected function _resize($width, $height)
+    {
+        $orig_width = $this->width;
+        $orig_height = $this->height;
+
+        if ($width > ($this->width / 2) && $height > ($this->height / 2))
+        {
+            while ($orig_width / 2 > round($width  * 1.1) && $orig_height / 2 > round($height * 1.1))
+            {
+                $orig_width /= 2;
+                $orig_height /= 2;
+            }
+
+            $image = $this->create($orig_width, $orig_height);
+
+            if (imagecopyresized($image, $this->image, 0, 0, 0, 0, $orig_width, $orig_height, $this->width, $this->height))
+            {
+                imagedestroy($this->image);
+                $this->image = $image;
+            }
+        }
+
+        $image = $this->create($width, $height);
+
+        if (imagecopyresampled($image, $this->image, 0, 0, 0, 0, $width, $height, $orig_width, $orig_height))
+        {
+            imagedestroy($this->image);
+            $this->image = $image;
+            $this->width  = imagesx($image);
+            $this->height = imagesy($image);
+        }
     }
 
     /**

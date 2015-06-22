@@ -3,12 +3,11 @@
 namespace mervick\image;
 
 use Yii;
-use yii\base\Component;
+use yii\base\Component as BaseComponent;
 use yii\base\ErrorException;
-use mervick\image\drivers;
 
 
-class Image extends Component
+class Component extends BaseComponent
 {
     /**
      * @var string Driver
@@ -22,5 +21,14 @@ class Image extends Component
     public function init()
     {
         parent::init();
+    }
+
+    /**
+     * @param string $file
+     * @return \mervick\image\drivers\ImageDriver
+     */
+    public function load($file)
+    {
+        return Image::load($file, $this->driver);
     }
 }

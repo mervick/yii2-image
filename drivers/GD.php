@@ -176,24 +176,22 @@ class GD extends Driver
      * Adaptation the image.
      * @param integer $width Image width
      * @param integer $height Image height
-     * @param integer $bg_width Background width
-     * @param integer $bg_height Background height
      * @param integer $offset_x Offset from left
      * @param integer $offset_y Offset from top
      */
-    protected function _adapt($width, $height, $bg_width, $bg_height, $offset_x, $offset_y)
+    protected function _adapt($width, $height, $offset_x, $offset_y)
     {
         $image = $this->image;
-        $this->image = $this->_create($bg_width, $bg_height);
-        $this->width = $bg_width;
-        $this->height = $bg_height;
+        $this->image = $this->_create($width, $height);
         imagealphablending($this->image, false);
         $col = imagecolorallocatealpha($this->image, 0, 255, 0, 127);
-        imagefilledrectangle($this->image, 0, 0, $bg_width, $bg_height, $col);
+        imagefilledrectangle($this->image, 0, 0, $width, $height, $col);
         imagealphablending($this->image, true);
-        imagecopy($this->image, $image, $offset_x, $offset_y, 0, 0, $width, $height);
+        imagecopy($this->image, $image, $offset_x, $offset_y, 0, 0, $this->width, $this->height);
         imagealphablending($this->image, false);
         imagesavealpha($this->image, true);
+        $this->width = $width;
+        $this->height = $height;
         imagedestroy($image);
     }
 

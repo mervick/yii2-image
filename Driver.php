@@ -309,4 +309,158 @@ abstract class Driver
      */
     abstract protected function _crop($width, $height, $offset_x, $offset_y);
 
+    /**
+     * Sharpen the image.
+     * @param integer $amount
+     * @return Driver
+     */
+    final public function sharpen($amount)
+    {
+        $this->_sharpen(min(max($amount, 1), 100));
+        return $this;
+    }
+
+    /**
+     * Sharpen the image.
+     * @param integer $amount
+     */
+    abstract protected function _sharpen($amount);
+
+    /**
+     * Add a reflection to the image. The most opaque part of the reflection
+     * will be equal to the opacity setting and fade out to full transparent.
+     * Alpha transparency is preserved.
+     *
+     *     // Create a 50 pixel reflection that fades from 0-100% opacity
+     *     $image->reflection(50);
+     *
+     *     // Create a 50 pixel reflection that fades from 100-0% opacity
+     *     $image->reflection(50, 100, true);
+     *
+     *     // Create a 50 pixel reflection that fades from 0-60% opacity
+     *     $image->reflection(50, 60, true);
+     *
+     * [!!] By default, the reflection will be go from transparent at the top
+     * to opaque at the bottom.
+     *
+     * @param integer $height reflection height
+     * @param integer $opacity reflection opacity: 0-100
+     * @param boolean $fade_in true to fade in, false to fade out
+     * @return Driver
+     */
+    public function reflection($height = null, $opacity = 100, $fade_in = false)
+    {
+        if ($height === null || $height > $this->height)  {
+            $height = $this->height;
+        }
+        $opacity = min(max($opacity, 0), 100);
+        $this->_reflection($height, $opacity, $fade_in);
+
+        return $this;
+    }
+
+    /**
+     * Add a reflection to the image.
+     * @param integer $height reflection height
+     * @param integer $opacity reflection opacity: 0-100
+     * @param boolean $fade_in true to fade in, false to fade out
+     */
+    abstract protected function _reflection($height, $opacity, $fade_in);
+
+    /**
+     * Add a watermark to the image with a specified opacity.
+     * Alpha transparency will be preserved.
+     *
+     * If no offset is specified, the center of the axis will be used.
+     * If an offset of true is specified, the bottom of the axis will be used.
+     *
+     *     // Add a watermark to the bottom right of the image
+     *     $mark = Image::factory('upload/watermark.png');
+     *     $image->watermark($mark, true, true);
+     *
+     * @param Driver $watermark
+     * @param integer $offset_x Offset from the left
+     * @param integer $offset_y Offset from the top
+     * @param integer $opacity Opacity of watermark: 1-100
+     * @return Driver
+     */
+    public function watermark(Driver $watermark, $offset_x = null, $offset_y = null, $opacity = 100)
+    {
+        if ($offset_x === null) {
+            // Center the X offset
+            $offset_x = round(($this->width - $watermark->width) / 2);
+        } elseif ($offset_x === true) {
+            // Bottom the X offset
+            $offset_x = $this->width - $watermark->width;
+        } elseif ($offset_x < 0) {
+            // Set the X offset from the right
+            $offset_x = $this->width - $watermark->width + $offset_x;
+        }
+
+        if ($offset_y === null) {
+            // Center the Y offset
+            $offset_y = round(($this->height - $watermark->height) / 2);
+        } elseif ($offset_y === true) {
+            // Bottom the Y offset
+            $offset_y = $this->height - $watermark->height;
+        } elseif ($offset_y < 0) {
+            // Set the Y offset from the bottom
+            $offset_y = $this->height - $watermark->height + $offset_y;
+        }
+        $opacity = min(max($opacity, 1), 100);
+        $this->_watermark($watermark, $offset_x, $offset_y, $opacity);
+
+        return $this;
+    }
+
+    /**
+     * Add a watermark to the image.
+     * @param Driver $image
+     * @param integer $offset_x
+     * @param integer $offset_y
+     * @param integer $opacity
+     */
+    abstract protected function _watermark(Driver $image, $offset_x, $offset_y, $opacity);
+
+    /**
+     * Set the background color of an image. This is only useful for images
+     * with alpha transparency.
+     *
+     *     // Make the image background black
+     *     $image->background('#000');
+     *
+     *     // Make the image background black with 50% opacity
+     *     $image->background('#000', 50);
+     *
+     * @param string $color Hexadecimal color
+     * @param integer $opacity Background opacity: 0-100
+     * @return Driver
+     */
+    public function background($color, $opacity = 100)
+    {
+        if ($color{0} === '#') {
+            $color = substr($color, 1);
+        }
+
+        if (strlen($color) == 3) {
+            $color = preg_replace('/./', '$0$0', $color);
+        }
+
+        list ($r, $g, $b) = array_map('hexdec', str_split($color, 2));
+
+        $opacity = min(max($opacity, 0), 100);
+        $this->_background($r, $g, $b, $opacity);
+
+        return $this;
+    }
+
+    /**
+     * Fill the background of the image.
+     * @param integer $r
+     * @param integer $g
+     * @param integer $b
+     * @param integer $opacity
+     */
+    abstract protected function _background($r, $g, $b, $opacity);
+
 }

@@ -113,4 +113,21 @@ abstract class Driver
      */
     abstract protected function _rotate($degrees);
 
+    /**
+     * Flip the image along the horizontal or vertical axis.
+     * @param string $direction May be Driver::HORIZONTAL, Driver::VERTICAL
+     * @return Driver
+     */
+    final public function flip($direction)
+    {
+        $this->_flip($direction === Driver::HORIZONTAL ? Driver::HORIZONTAL : Driver::VERTICAL);
+        return $this;
+    }
+
+    /**
+     * Flip the image.
+     * @param string $direction
+     */
+    abstract protected function _flip($direction);
+
 }

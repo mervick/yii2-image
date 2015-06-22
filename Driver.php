@@ -12,6 +12,9 @@ use yii\base\InvalidParamException;
  */
 abstract class Driver
 {
+
+    const HORIZONTAL = 'horizontal';
+    const VERTICAL = 'vertical';
     /**
      * @var string file path
      */

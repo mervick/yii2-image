@@ -51,8 +51,25 @@ class GD extends Driver
 
         parent::__construct($filename, $throwsErrors);
 
-        $create_func = 'createfrom' . $this->getFormat();
+        $create_func = 'imagecreatefrom' . $this->getFormat();
         $this->image = $create_func($filename);
+
+        if (!$this->image) {
+            $this->error = sprintf('Bad image format: "%s"', $filename);
+            if ($throwsErrors) {
+                throw new \InvalidParamException($this->error);
+            }
+        }
+    }
+
+    /**
+     * Destructor.
+     */
+    public function __destruct()
+    {
+        if (is_resource($this->image)) {
+            imagedestroy($this->image);
+        }
     }
 
     /**
@@ -93,17 +110,6 @@ class GD extends Driver
         }
 
         return $format;
-
-    }
-
-    /**
-     * Destructor.
-     */
-    public function __destruct()
-    {
-        if (is_resource($this->image)) {
-            imagedestroy($this->image);
-        }
     }
 
     /**

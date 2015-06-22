@@ -2,12 +2,11 @@
 
 namespace mervick\image;
 
-use Yii;
-use yii\base\Component as BaseComponent;
-use yii\base\ErrorException;
-
-
-class Component extends BaseComponent
+/**
+ * Class Component
+ * @package mervick\image
+ */
+class Component extends yii\base\Component
 {
     /**
      * @var string Driver
@@ -16,14 +15,7 @@ class Component extends BaseComponent
 
 
     /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        parent::init();
-    }
-
-    /**
+     * Load image from file
      * @param string $file
      * @return \mervick\image\drivers\ImageDriver
      */

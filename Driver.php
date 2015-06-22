@@ -463,4 +463,81 @@ abstract class Driver
      */
     abstract protected function _background($r, $g, $b, $opacity);
 
+
+    /**
+     * Save the image. If the filename is omitted, the original image will
+     * be overwritten.
+     *
+     *     // Save the image as a PNG
+     *     $image->save('saved/cool.png');
+     *
+     *     // Overwrite the original image
+     *     $image->save();
+     *
+     * [!!] If the file exists, but is not writable, an exception will be thrown.
+     *
+     * [!!] If the file does not exist, and the directory is not writable, an
+     * exception will be thrown.
+     *
+     * @param string   $file     new image path
+     * @param integer  $quality  quality of image: 1-100
+     * @return boolean
+     * @throws \ErrorException
+     */
+    final public function save($file = null, $quality = 100)
+    {
+        if ($file === null)
+        {
+            // Overwrite the file
+            $file = $this->file;
+        }
+
+        if (is_file($file))
+        {
+            if ( ! is_writable($file))
+            {
+                throw new \ErrorException(sprintf('File must be writable: %s',$file));
+            }
+        }
+        else
+        {
+            // Get the directory of the file
+            $directory = realpath(pathinfo($file, PATHINFO_DIRNAME));
+
+            if ( ! is_dir($directory) OR ! is_writable($directory))
+            {
+                throw new \ErrorException(sprintf('Directory must be writable: %s',$directory));
+            }
+        }
+
+        // The quality must be in the range of 1 to 100
+        $quality = min(max($quality, 1), 100);
+
+        return $this->_do_save($file, $quality);
+    }
+
+    /**
+     * Render the image and return the binary string.
+     *
+     *     // Render the image at 50% quality
+     *     $data = $image->render(NULL, 50);
+     *
+     *     // Render the image as a PNG
+     *     $data = $image->render('png');
+     *
+     * @param   string   $type     image type to return: png, jpg, gif, etc
+     * @param   integer  $quality  quality of image: 1-100
+     * @return  string
+     * @uses    Image::_do_render
+     */
+    public function render($type = NULL, $quality = 100)
+    {
+        if ($type === NULL)
+        {
+            // Use the current image type
+            $type = image_type_to_extension($this->type, FALSE);
+        }
+
+        return $this->_do_render($type, $quality);
+    }
 }

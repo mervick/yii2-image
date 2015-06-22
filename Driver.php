@@ -5,7 +5,11 @@ namespace mervick\image;
 use Yii;
 use yii\base\InvalidParamException;
 
-abstract class ImageDriver
+/**
+ * Class Driver
+ * @package mervick\image
+ */
+abstract class Driver
 {
     /**
      * @var string file path
@@ -39,7 +43,7 @@ abstract class ImageDriver
 
 
     /**
-     * Constructor. Opens image.
+     * Constructor. Opens an image.
      *
      * @param string $filename
      * @param bool $throwsErrors
@@ -82,7 +86,7 @@ abstract class ImageDriver
      * Rotate the image.
      *
      * @param integer $degrees
-     * @return ImageDriver
+     * @return Driver
      */
     final public function rotate($degrees)
     {

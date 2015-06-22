@@ -8,6 +8,7 @@ use mervick\image\DriverInterface;
 /**
  * GD driver.
  * @package mervick\image\drivers
+ * @author Andrey Izman
  */
 class GD extends Driver
 {
@@ -177,8 +178,8 @@ class GD extends Driver
      * @param integer $height Image height
      * @param integer $bg_width Background width
      * @param integer $bg_height Background height
-     * @param integer $offset_x Offset from the left
-     * @param integer $offset_y Offset from the top
+     * @param integer $offset_x Offset from left
+     * @param integer $offset_y Offset from top
      */
     protected function _adapt($width, $height, $bg_width, $bg_height, $offset_x, $offset_y)
     {
@@ -194,6 +195,26 @@ class GD extends Driver
         imagealphablending($this->image, false);
         imagesavealpha($this->image, true);
         imagedestroy($image);
+    }
+
+    /**
+     * Crop image.
+     * @param integer $width New width
+     * @param integer $height New height
+     * @param integer $offset_x Offset from left
+     * @param integer $offset_y Offset from top
+     */
+    protected function _crop($width, $height, $offset_x, $offset_y)
+    {
+        $image = $this->create($width, $height);
+
+        if (imagecopyresampled($image, $this->image, 0, 0, $offset_x, $offset_y, $width, $height, $width, $height))
+        {
+            imagedestroy($this->image);
+            $this->image = $image;
+            $this->width  = imagesx($image);
+            $this->height = imagesy($image);
+        }
     }
 
     /**

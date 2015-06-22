@@ -8,6 +8,7 @@ use yii\base\InvalidParamException;
 /**
  * Class Driver
  * @package mervick\image
+ * @author Andrey Izman
  */
 abstract class Driver
 {

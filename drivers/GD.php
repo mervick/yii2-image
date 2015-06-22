@@ -223,6 +223,16 @@ class GD extends Driver
      */
     protected function _rotate($degrees)
     {
-
+        $transparent = imagecolorallocatealpha($this->_image, 0, 255, 0, 127);
+        $image = imagerotate($this->image, 360 - $degrees, $transparent, true);
+        imagesavealpha($image, true);
+        $width = imagesx($image);
+        $height = imagesy($image);
+        if (imagecopymerge($this->image, $image, 0, 0, 0, 0, $width, $height, 100)) {
+            imagedestroy($this->image);
+            $this->image = $image;
+            $this->width  = $width;
+            $this->height = $height;
+        }
     }
 }

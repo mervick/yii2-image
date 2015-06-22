@@ -469,7 +469,7 @@ abstract class Driver
      * be overwritten.
      *
      *     // Save the image as a PNG
-     *     $image->save('saved/cool.png');
+     *     $image->save('/path/to/cool.png');
      *
      *     // Overwrite the original image
      *     $image->save();
@@ -479,42 +479,42 @@ abstract class Driver
      * [!!] If the file does not exist, and the directory is not writable, an
      * exception will be thrown.
      *
-     * @param string   $file     new image path
-     * @param integer  $quality  quality of image: 1-100
+     * @param string|null $filename Image file name
+     * @param integer|null $quality Quality 1-100 for JPEG, 0-9 for PNG
      * @return boolean
      * @throws \ErrorException
      */
-    final public function save($file = null, $quality = 100)
+    final public function save($filename = null, $quality = null)
     {
-        if ($file === null)
-        {
+        if (empty($filename)) {
             // Overwrite the file
-            $file = $this->file;
+            $filename = $this->filename;
+        } else {
+            $filename = Yii::getAlias($filename);
         }
 
-        if (is_file($file))
-        {
-            if ( ! is_writable($file))
-            {
-                throw new \ErrorException(sprintf('File must be writable: %s',$file));
+        if (is_file($filename)) {
+            if (!is_writable($filename)) {
+                throw new \ErrorException(sprintf('Enable to write file: %s', $filename));
             }
-        }
-        else
-        {
-            // Get the directory of the file
-            $directory = realpath(pathinfo($file, PATHINFO_DIRNAME));
-
-            if ( ! is_dir($directory) OR ! is_writable($directory))
-            {
-                throw new \ErrorException(sprintf('Directory must be writable: %s',$directory));
+        } else {
+            $path = realpath(pathinfo($filename, PATHINFO_DIRNAME));
+            if (!is_dir($path)) {
+                if (!mkdir($path, 0777, true)) {
+                    throw new \ErrorException(sprintf('Unable to make dir: %s', $path));
+                }
             }
         }
 
-        // The quality must be in the range of 1 to 100
-        $quality = min(max($quality, 1), 100);
-
-        return $this->_do_save($file, $quality);
+        return $this->_save($filename, $quality);
     }
+
+    /**
+     * Save image to file.
+     * @param string $filename
+     * @param int|null $quality
+     */
+    abstract protected function _save($filename, $quality);
 
     /**
      * Render the image and return the binary string.
@@ -525,19 +525,24 @@ abstract class Driver
      *     // Render the image as a PNG
      *     $data = $image->render('png');
      *
-     * @param   string   $type     image type to return: png, jpg, gif, etc
-     * @param   integer  $quality  quality of image: 1-100
-     * @return  string
-     * @uses    Image::_do_render
+     * @param string|null $type
+     * @param integer|null $quality
+     * @return string
      */
-    public function render($type = NULL, $quality = 100)
+    public function render($type = null, $quality = null)
     {
-        if ($type === NULL)
-        {
-            // Use the current image type
-            $type = image_type_to_extension($this->type, FALSE);
+        if ($type === null) {
+            $type = image_type_to_extension($this->type, null);
         }
 
-        return $this->_do_render($type, $quality);
+        return $this->_render($type, $quality);
     }
+
+    /**
+     * Render the image.
+     * @param string $type
+     * @param integer $quality
+     * @return strng
+     */
+    abstract protected function _render($type, $quality);
 }

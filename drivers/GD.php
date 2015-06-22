@@ -235,4 +235,26 @@ class GD extends Driver
             $this->height = $height;
         }
     }
+
+    /**
+     * Flip the image.
+     * @param string $direction May be Driver::HORIZONTAL or Driver::VERTICAL
+     */
+    protected function _flip($direction)
+    {
+        $image = $this->_create($this->width, $this->height);
+
+        if ($direction === Driver::HORIZONTAL) {
+            for ($x = 0; $x < $this->width; $x++) {
+                imagecopy($image, $this->image, $x, 0, $this->width - $x - 1, 0, 1, $this->height);
+            }
+        } else {
+            for ($y = 0; $y < $this->height; $y++) {
+                imagecopy($image, $this->image, 0, $y, 0, $this->height - $y - 1, $this->width, 1);
+            }
+        }
+
+        imagedestroy($this->image);
+        $this->image = $image;
+    }
 }

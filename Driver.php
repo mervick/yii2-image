@@ -90,7 +90,7 @@ abstract class Driver
      * @param string $master [optional] Master dimension. Default is 'auto'
      * @return Driver
      */
-    public function resize($width, $height, $master = Image::AUTO)
+    final public function resize($width, $height, $master = Image::AUTO)
     {
         if (empty($width) && empty($height)) {
             return $this;
@@ -244,5 +244,69 @@ abstract class Driver
      * @param string $direction
      */
     abstract protected function _flip($direction);
+
+    /**
+     * Crop the image.
+     * @param integer $width
+     * @param integer  $height
+     * @param integer|null $offset_x
+     * @param integer|null $offset_y
+     * @return $this
+     */
+    final public function crop($width, $height, $offset_x = null, $offset_y = null)
+    {
+        if ($width > $this->width) {
+            $width = $this->width;
+        }
+        if ($height > $this->height) {
+            $height = $this->height;
+        }
+
+        if ($offset_x === null) {
+            // Center
+            $offset_x = round(($this->width - $width) / 2);
+        } elseif ($offset_x === true) {
+            // Float right
+            $offset_x = $this->width - $width;
+        } elseif ($offset_x < 0) {
+            // Offset right
+            $offset_x = $this->width - $width + $offset_x;
+        }
+
+        if ($offset_y === null) {
+            // Middle
+            $offset_y = round(($this->height - $height) / 2);
+        } elseif ($offset_y === true) {
+            // Float bottom
+            $offset_y = $this->height - $height;
+        } elseif ($offset_y < 0) {
+            // Offset bottom
+            $offset_y = $this->height - $height + $offset_y;
+        }
+
+        $max_width  = $this->width  - $offset_x;
+        $max_height = $this->height - $offset_y;
+
+        if ($width > $max_width) {
+            $width = $max_width;
+        }
+
+        if ($height > $max_height) {
+            $height = $max_height;
+        }
+
+        $this->_crop($width, $height, $offset_x, $offset_y);
+
+        return $this;
+    }
+
+    /**
+     * Crop the image.
+     * @param integer $width
+     * @param integer $height
+     * @param integer $offset_x
+     * @param integer $offset_y
+     */
+    abstract protected function _crop($width, $height, $offset_x, $offset_y);
 
 }

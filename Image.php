@@ -1,7 +1,12 @@
 <?php
 
-namespace mervick\image\helpers;
+namespace mervick\image;
 
+/**
+ * Class Image
+ * @package mervick\image
+ * @author Andrey Izman
+ */
 class Image
 {
     /**

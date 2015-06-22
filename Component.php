@@ -5,6 +5,7 @@ namespace mervick\image;
 /**
  * Class Component
  * @package mervick\image
+ * @author Andrey Izman
  */
 class Component extends yii\base\Component
 {

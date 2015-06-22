@@ -44,9 +44,8 @@ abstract class Driver
 
     /**
      * Constructor. Opens an image.
-     *
      * @param string $filename
-     * @param bool $throwsErrors
+     * @param boolean $throwsErrors
      * @throws \InvalidParamException
      */
     public function __construct($filename, $throwsErrors = true)
@@ -84,7 +83,6 @@ abstract class Driver
 
     /**
      * Rotate the image.
-     *
      * @param integer $degrees
      * @return Driver
      */
@@ -107,7 +105,6 @@ abstract class Driver
 
     /**
      * Rotate the image using driver.
-     *
      * @param integer $degrees
      */
     abstract protected function _rotate($degrees);

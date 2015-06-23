@@ -33,6 +33,7 @@ class Imagick extends Driver
     }
 
     /**
+     * Open the image.
      * @param string $filename
      * @param bool $throwsErrors
      * @throws InvalidParamException

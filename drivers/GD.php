@@ -147,7 +147,7 @@ class GD extends Driver
         $image = $this->image;
         $this->image = $this->create($width, $height);
         imagealphablending($this->image, false);
-        $col = imagecolorallocatealpha($this->image, 0, 255, 0, 127);
+        $col = imagecolorallocatealpha($this->image, 0, 0, 0, 127);
         imagefilledrectangle($this->image, 0, 0, $width, $height, $col);
         imagealphablending($this->image, true);
         imagecopy($this->image, $image, $offset_x, $offset_y, 0, 0, $this->width, $this->height);

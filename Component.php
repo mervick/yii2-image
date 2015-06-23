@@ -23,7 +23,7 @@ class Component extends \yii\base\Component
     /**
      * Load image from file
      * @param string $file
-     * @return \mervick\image\drivers\ImageDriver
+     * @return Driver
      */
     public function load($file)
     {

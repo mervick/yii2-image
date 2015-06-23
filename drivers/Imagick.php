@@ -234,4 +234,42 @@ class Imagick extends Driver
             $this->im = $background;
         }
     }
+
+    /**
+     * Write image to the file.
+     * @param string $filename
+     * @param integer|null $quality
+     * @return boolean
+     */
+    protected function _save($filename, $quality)
+    {
+        $format = $this->getFormat(pathinfo($filename, PATHINFO_EXTENSION), $quality, $type);
+        $this->im->setFormat($format);
+        if (isset($quality)) {
+            $this->im->setImageCompressionQuality($quality);
+        }
+        if ($status = $this->im->writeImage($filename)) {
+            $this->filename = $filename;
+            $this->type = $type;
+            $this->mime = image_type_to_mime_type($type);
+        }
+        return $status;
+    }
+
+    /**
+     * Render the image to data string.
+     * @param string $format
+     * @param integer|null $quality
+     * @return string
+     */
+    protected function _render($format, $quality)
+    {
+        $format = $this->getFormat($format, $quality);
+        $this->im->setFormat($format);
+        if (isset($quality)) {
+            $this->im->setImageCompressionQuality($quality);
+        }
+
+        return (string) $this->im;
+    }
 }

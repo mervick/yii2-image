@@ -47,6 +47,7 @@ class GD extends Driver
      * @param string $filename
      * @param boolean $throwsErrors
      * @throws InvalidParamException
+     * @throws \ErrorException
      */
     public function __construct($filename, $throwsErrors = true)
     {

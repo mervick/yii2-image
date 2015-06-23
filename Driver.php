@@ -546,4 +546,41 @@ abstract class Driver
      * @return string
      */
     abstract protected function _render($type, $quality);
+
+    /**
+     * Get image format by extension or by $type
+     * @param null $extension
+     * @param null $quality
+     * @param null $type
+     * @return string
+     */
+    protected function getFormat($extension = null, &$quality = null, &$type = null)
+    {
+        if (empty($extension)) {
+            $extension = image_type_to_extension($this->type, false);
+        }
+
+        $extension = strtolower($extension);
+
+        if (!in_array($extension, ['jpeg', 'gif', 'png'])) {
+            $extension = 'jpeg';
+        }
+
+        switch ($extension) {
+            case 'jpeg':
+                $type = IMAGETYPE_JPEG;
+                $quality = $quality >= 0 ? min($quality, 100) : 75;
+                break;
+            case 'gif':
+                $type = IMAGETYPE_GIF;
+                $quality = null;
+                break;
+            case 'png':
+                $type = IMAGETYPE_PNG;
+                $quality = $quality >= 0 ? min($quality, 9) : 9;
+                break;
+        }
+
+        return $extension;
+    }
 }

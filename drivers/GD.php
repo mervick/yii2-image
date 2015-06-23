@@ -51,6 +51,7 @@ class GD extends Driver
     public function __construct($filename, $throwsErrors = true)
     {
         static $isLoaded;
+
         if (!isset($isLoaded)) {
             $isLoaded = self::isLoaded();
         }
@@ -180,7 +181,7 @@ class GD extends Driver
     protected function _adapt($width, $height, $offset_x, $offset_y)
     {
         $image = $this->image;
-        $this->image = $this->_create($width, $height);
+        $this->image = $this->create($width, $height);
         imagealphablending($this->image, false);
         $col = imagecolorallocatealpha($this->image, 0, 255, 0, 127);
         imagefilledrectangle($this->image, 0, 0, $width, $height, $col);
@@ -218,7 +219,7 @@ class GD extends Driver
      */
     protected function _rotate($degrees)
     {
-        $transparent = imagecolorallocatealpha($this->_image, 0, 255, 0, 127);
+        $transparent = imagecolorallocatealpha($this->image, 0, 255, 0, 127);
         $image = imagerotate($this->image, 360 - $degrees, $transparent, true);
         imagesavealpha($image, true);
         $width = imagesx($image);
@@ -237,7 +238,7 @@ class GD extends Driver
      */
     protected function _flip($direction)
     {
-        $image = $this->_create($this->width, $this->height);
+        $image = $this->create($this->width, $this->height);
 
         if ($direction === Image::HORIZONTAL) {
             for ($x = 0; $x < $this->width; $x++) {
@@ -251,5 +252,144 @@ class GD extends Driver
 
         imagedestroy($this->image);
         $this->image = $image;
+    }
+
+    /**
+     * Sharpen the image.
+     * @param integer $amount
+     */
+    protected function _sharpen($amount)
+    {
+        // Amount should be in the range of 18-10
+        $amount = round(abs(-18 + ($amount * 0.08)), 2);
+        // Gaussian blur matrix
+        $matrix = [
+            [-1, -1, -1],
+            [-1, $amount, -1],
+            [-1, -1, -1],
+        ];
+        // Perform the sharpen
+        if (imageconvolution($this->image, $matrix, $amount - 8, 0)) {
+            // Reset the width and height
+            $this->width  = imagesx($this->image);
+            $this->height = imagesy($this->image);
+        }
+    }
+
+    /**
+     * Reflection the image.
+     * @param integer $height
+     * @param integer $opacity
+     * @param boolean $fade_in
+     */
+    protected function _reflection($height, $opacity, $fade_in)
+    {
+        $opacity = round(abs(($opacity * 127 / 100) - 127));
+        $stepping = (127 - ($opacity < 127 ? $opacity : 0)) / max($height, 1);
+        $reflection = $this->create($this->width, $this->height + $height);
+
+        imagecopy($reflection, $this->image, 0, 0, 0, 0, $this->width, $this->height);
+
+        for ($offset = 0; $height >= $offset; $offset++)
+        {
+            $src_y = $this->height - $offset - 1;
+            $dst_y = $this->height + $offset;
+
+            if ($fade_in) {
+                $dst_opacity = round($opacity + ($stepping * ($height - $offset)));
+            } else {
+                $dst_opacity = round($opacity + ($stepping * $offset));
+            }
+
+            $line = $this->create($this->width, 1);
+            imagecopy($line, $this->image, 0, 0, 0, $src_y, $this->width, 1);
+            imagefilter($line, IMG_FILTER_COLORIZE, 0, 0, 0, $dst_opacity);
+            imagecopy($reflection, $line, 0, $dst_y, 0, 0, $this->width, 1);
+        }
+
+        imagedestroy($this->image);
+        $this->image = $reflection;
+
+        $this->width  = imagesx($reflection);
+        $this->height = imagesy($reflection);
+    }
+
+    /**
+     * Watermark.
+     * @param Driver $watermark
+     * @param integer $offset_x
+     * @param integer $offset_y
+     * @param integer $opacity
+     */
+    protected function _watermark(Driver $watermark, $offset_x, $offset_y, $opacity)
+    {
+        $overlay = imagecreatefromstring($watermark->render());
+        imagesavealpha($overlay, true);
+        $width  = imagesx($overlay);
+        $height = imagesy($overlay);
+
+        if ($opacity < 100)  {
+            $opacity = round(abs(($opacity * 127 / 100) - 127));
+            $color = imagecolorallocatealpha($overlay, 127, 127, 127, $opacity);
+            imagelayereffect($overlay, IMG_EFFECT_OVERLAY);
+            imagefilledrectangle($overlay, 0, 0, $width, $height, $color);
+        }
+        imagealphablending($this->image, true);
+        imagecopy($this->image, $overlay, $offset_x, $offset_y, 0, 0, $width, $height);
+        imagedestroy($overlay);
+    }
+
+    /**
+     * Fill image background.
+     * @param integer $r
+     * @param integer $g
+     * @param integer $b
+     * @param integer $opacity
+     */
+    protected function _background($r, $g, $b, $opacity)
+    {
+        $opacity = round(abs(($opacity * 127 / 100) - 127));
+        $background = $this->create($this->width, $this->height);
+        $color = imagecolorallocatealpha($background, $r, $g, $b, $opacity);
+        imagefilledrectangle($background, 0, 0, $this->width, $this->height, $color);
+        imagealphablending($background, true);
+        imagecopy($background, $this->image, 0, 0, 0, 0, $this->width, $this->height);
+        imagedestroy($this->image);
+        $this->image = $background;
+    }
+
+    /**
+     * Save to file.
+     * @param string $filename
+     * @param integer|null $quality
+     * @return boolean
+     */
+    protected function _save($filename, $quality)
+    {
+        $format = $this->getFormat(pathinfo($filename, PATHINFO_EXTENSION), $quality, $type);
+        $save_func = "image{$format}";
+        $status = isset($quality) ? $save_func($this->image, $filename, $quality) : $save_func($this->image, $filename);
+
+        if ($status) {
+            $this->type = $type;
+            $this->mime = image_type_to_mime_type($type);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Render image to data string.
+     * @param string $type
+     * @param integer $quality
+     * @return string
+     */
+    protected function _render($type, $quality)
+    {
+        $format = $this->getFormat($type, $quality);
+        $save_func = "image{$format}";
+        ob_start();
+        isset($quality) ? $save_func($this->image, null, $quality) : $save_func($this->image);
+        return ob_get_clean();
     }
 }

@@ -47,16 +47,16 @@ abstract class Driver extends Object
     /**
      * Constructor. Opens an image.
      * @param string $filename File path
-     * @param boolean $throwsErrors [optional] If true will be throws exceptions
+     * @param boolean $throwErrors [optional] If true will be throws exceptions
      * @throws InvalidParamException
      */
-    public function __construct($filename, $throwsErrors = true)
+    public function __construct($filename, $throwErrors = true)
     {
         $filename = Yii::getAlias($filename);
 
         if (!is_readable($filename)) {
             $this->error = sprintf('Enable to read file: "%s"', $filename);
-            if ($throwsErrors) {
+            if ($throwErrors) {
                 throw new InvalidParamException($this->error);
             }
             return;
@@ -70,7 +70,7 @@ abstract class Driver extends Object
 
         if (empty($info) || empty($info[0]) || empty($info[1])) {
             $this->error = sprintf('Bad image format: "%s"', $filename);
-            if ($throwsErrors) {
+            if ($throwErrors) {
                 throw new InvalidParamException($this->error);
             }
             return;

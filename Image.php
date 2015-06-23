@@ -29,12 +29,12 @@ class Image extends Object
      * Load image from file.
      * @param string $file File path
      * @param string|null $driver [optional] Driver class name
-     * @param boolean $throwsErrors [optional] Show errors
+     * @param boolean $throwErrors [optional] Show errors
      * @return Driver
      */
-    public static function load($file, $driver = null, $throwsErrors = true)
+    public static function load($file, $driver = null, $throwErrors = true)
     {
         $driver = $driver ?: '\\mervick\\image\\drivers\\GD';
-        return new $driver($file, $throwsErrors);
+        return new $driver($file, $throwErrors);
     }
 }

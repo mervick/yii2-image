@@ -45,11 +45,11 @@ class GD extends Driver
     /**
      * Read image.
      * @param string $filename
-     * @param boolean $throwsErrors
+     * @param boolean $throwErrors
      * @throws InvalidParamException
      * @throws \ErrorException
      */
-    public function __construct($filename, $throwsErrors = true)
+    public function __construct($filename, $throwErrors = true)
     {
         static $isLoaded;
 
@@ -57,14 +57,14 @@ class GD extends Driver
             $isLoaded = self::isLoaded();
         }
 
-        parent::__construct($filename, $throwsErrors);
+        parent::__construct($filename, $throwErrors);
 
         $create_func = 'imagecreatefrom' . $this->getFormat();
         $this->image = $create_func($this->filename);
 
         if (!$this->image) {
             $this->error = sprintf('Bad image format: "%s"', $this->filename);
-            if ($throwsErrors) {
+            if ($throwErrors) {
                 throw new InvalidParamException($this->error);
             }
         } else {

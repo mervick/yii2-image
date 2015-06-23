@@ -17,7 +17,7 @@ class Component extends \yii\base\Component
     /**
      * @var boolean
      */
-    public $throwsErrors = true;
+    public $throwErrors = true;
 
 
     /**
@@ -27,6 +27,6 @@ class Component extends \yii\base\Component
      */
     public function load($file)
     {
-        return Image::load($file, $this->driver, $this->throwsErrors);
+        return Image::load($file, $this->driver, $this->throwErrors);
     }
 }

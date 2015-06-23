@@ -35,11 +35,11 @@ class Imagick extends Driver
     /**
      * Open the image.
      * @param string $filename
-     * @param boolean $throwsErrors
+     * @param boolean $throwErrors
      * @throws InvalidParamException
      * @throws \ErrorException
      */
-    public function __construct($filename, $throwsErrors = true)
+    public function __construct($filename, $throwErrors = true)
     {
         static $isLoaded;
 
@@ -47,7 +47,7 @@ class Imagick extends Driver
             $isLoaded = self::isLoaded();
         }
 
-        parent::__construct($filename, $throwsErrors);
+        parent::__construct($filename, $throwErrors);
 
         $this->im = new \Imagick;
         $this->im->readImage($this->filename);

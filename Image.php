@@ -2,12 +2,14 @@
 
 namespace mervick\image;
 
+use yii\base\Object;
+
 /**
  * Class Image
  * @package mervick\image
  * @author Andrey Izman
  */
-class Image
+class Image extends Object
 {
     // Resizing constants
     const WIDTH   = 'width';

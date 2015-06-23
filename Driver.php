@@ -47,7 +47,7 @@ abstract class Driver
      * Constructor. Opens an image.
      * @param string $filename File path
      * @param boolean $throwsErrors [optional] If true will be throws exceptions
-     * @throws \InvalidParamException
+     * @throws InvalidParamException
      */
     public function __construct($filename, $throwsErrors = true)
     {
@@ -56,7 +56,7 @@ abstract class Driver
         if (!is_readable($filename)) {
             $this->error = sprintf('Enable to read file: "%s"', $filename);
             if ($throwsErrors) {
-                throw new \InvalidParamException($this->error);
+                throw new InvalidParamException($this->error);
             }
             return;
         }
@@ -70,7 +70,7 @@ abstract class Driver
         if (empty($info) || empty($info[0]) || empty($info[1])) {
             $this->error = sprintf('Bad image format: "%s"', $filename);
             if ($throwsErrors) {
-                throw new \InvalidParamException($this->error);
+                throw new InvalidParamException($this->error);
             }
             return;
         }

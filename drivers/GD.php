@@ -16,7 +16,7 @@ class GD extends Driver
     /**
      * @var resource Image resource
      */
-    protected $image;
+    private $image;
 
 
     /**

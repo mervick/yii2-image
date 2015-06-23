@@ -115,8 +115,8 @@ abstract class Driver extends Object
                 break;
 
             case Image::ADAPT:
-                $width = max(round(!empty($width) ? $width : $this->width * $height / $this->height, 1));
-                $height = max(round(!empty($height) ? $height : $this->height * $width / $this->width, 1));
+                $width = max(round(!empty($width) ? $width : $this->width * $height / $this->height), 1);
+                $height = max(round(!empty($height) ? $height : $this->height * $width / $this->width), 1);
                 if ($width / $height !== $this->width / $this->height) {
                     $bg_width = $this->width;
                     $bg_height = $this->height;

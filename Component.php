@@ -14,6 +14,11 @@ class Component extends yii\base\Component
      */
     public $driver = '\\mervick\\image\\drivers\\GD';
 
+    /**
+     * @var boolean
+     */
+    public $throwsErrors = true;
+
 
     /**
      * Load image from file
@@ -22,6 +27,6 @@ class Component extends yii\base\Component
      */
     public function load($file)
     {
-        return Image::load($file, $this->driver);
+        return Image::load($file, $this->driver, $this->throwsErrors);
     }
 }

@@ -4,13 +4,14 @@ namespace mervick\image;
 
 use Yii;
 use yii\base\InvalidParamException;
+use yii\base\Object;
 
 /**
  * Class Driver
  * @package mervick\image
  * @author Andrey Izman
  */
-abstract class Driver
+abstract class Driver extends Object
 {
     /**
      * @var string file path

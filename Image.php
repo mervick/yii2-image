@@ -26,7 +26,8 @@ class Image
     /**
      * Load image from file.
      * @param string $file File path
-     * @param string|null $driver Driver class name
+     * @param string|null $driver [optional] Driver class name
+     * @param boolean $throwsErrors [optional] Show errors
      * @return Driver
      */
     public static function load($file, $driver = null, $throwsErrors = true)

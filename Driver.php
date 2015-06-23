@@ -38,7 +38,7 @@ abstract class Driver
     public $mime;
 
     /**
-     * @var string|null Error
+     * @var string|null error
      */
     public $error;
 
@@ -251,7 +251,7 @@ abstract class Driver
      * @param integer  $height
      * @param integer|null $offset_x
      * @param integer|null $offset_y
-     * @return $this
+     * @return Driver
      */
     final public function crop($width, $height, $offset_x = null, $offset_y = null)
     {
@@ -500,8 +500,8 @@ abstract class Driver
         } else {
             $path = realpath(pathinfo($filename, PATHINFO_DIRNAME));
             if (!is_dir($path)) {
-                if (!mkdir($path, 0777, true)) {
-                    throw new \ErrorException(sprintf('Unable to make dir: %s', $path));
+                if (!@mkdir($path, 0777, true)) {
+                    throw new \ErrorException(sprintf('Unable to create dir: %s', $path));
                 }
             }
         }
@@ -542,7 +542,7 @@ abstract class Driver
      * Render the image.
      * @param string $type
      * @param integer $quality
-     * @return strng
+     * @return string
      */
     abstract protected function _render($type, $quality);
 }

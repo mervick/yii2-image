@@ -20,17 +20,18 @@ class Image
 
     // Flipping constants
     const HORIZONTAL = 'horizontal';
-    const VERTICAL = 'vertical';
+    const VERTICAL   = 'vertical';
 
 
     /**
      * Load image from file.
      * @param string $file File path
      * @param string|null $driver Driver class name
+     * @return Driver
      */
-    public static function load($file, $driver=null)
+    public static function load($file, $driver = null, $throwsErrors = true)
     {
         $driver = $driver ?: '\\mervick\\image\\drivers\\GD';
-        return new $driver($file);
+        return new $driver($file, $throwsErrors);
     }
 }

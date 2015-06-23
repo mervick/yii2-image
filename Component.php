@@ -7,7 +7,7 @@ namespace mervick\image;
  * @package mervick\image
  * @author Andrey Izman
  */
-class Component extends yii\base\Component
+class Component extends \yii\base\Component
 {
     /**
      * @var string Driver

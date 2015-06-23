@@ -14,7 +14,7 @@ use yii\base\InvalidParamException;
 class Imagick extends Driver
 {
     /**
-     * @var Imagick
+     * @var \Imagick
      */
     private $im;
 

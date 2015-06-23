@@ -87,7 +87,7 @@ class GD extends Driver
      * @param integer $height
      * @return resource
      */
-    protected function create($width, $height)
+    private function create($width, $height)
     {
         $image = imagecreatetruecolor($width, $height);
         imagealphablending($image, false);

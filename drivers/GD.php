@@ -59,10 +59,10 @@ class GD extends Driver
         parent::__construct($filename, $throwsErrors);
 
         $create_func = 'imagecreatefrom' . $this->getFormat();
-        $this->image = $create_func($filename);
+        $this->image = $create_func($this->filename);
 
         if (!$this->image) {
-            $this->error = sprintf('Bad image format: "%s"', $filename);
+            $this->error = sprintf('Bad image format: "%s"', $this->filename);
             if ($throwsErrors) {
                 throw new InvalidParamException($this->error);
             }

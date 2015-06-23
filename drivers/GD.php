@@ -4,6 +4,7 @@ namespace mervick\image\drivers;
 
 use mervick\image\Driver;
 use mervick\image\Image;
+use yii\base\InvalidParamException;
 
 /**
  * GD driver.
@@ -45,7 +46,7 @@ class GD extends Driver
      * Read image.
      * @param string $filename
      * @param boolean $throwsErrors
-     * @throws \InvalidParamException
+     * @throws InvalidParamException
      */
     public function __construct($filename, $throwsErrors = true)
     {
@@ -62,7 +63,7 @@ class GD extends Driver
         if (!$this->image) {
             $this->error = sprintf('Bad image format: "%s"', $filename);
             if ($throwsErrors) {
-                throw new \InvalidParamException($this->error);
+                throw new InvalidParamException($this->error);
             }
         } else {
             imagesavealpha($this->image, true);
@@ -115,23 +116,20 @@ class GD extends Driver
 
         switch ($extension) {
             case 'jpeg':
-                $format = 'jpeg';
                 $type = IMAGETYPE_JPEG;
                 $quality = $quality >= 0 ? min($quality, 100) : 75;
                 break;
             case 'gif':
-                $format = 'gif';
                 $type = IMAGETYPE_GIF;
                 $quality = null;
                 break;
             case 'png':
-                $format = 'png';
                 $type = IMAGETYPE_PNG;
                 $quality = $quality >= 0 ? min($quality, 9) : 9;
                 break;
         }
 
-        return $format;
+        return $extension;
     }
 
     /**

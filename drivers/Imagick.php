@@ -220,10 +220,8 @@ class Imagick extends Driver
      */
     protected function _background($r, $g, $b, $opacity)
     {
-        $color = sprintf('rgb(%d, %d, %d)', $r, $g, $b);
-
         $background = new \Imagick;
-        $background->newImage($this->width, $this->height, new \ImagickPixel($color));
+        $background->newImage($this->width, $this->height, new \ImagickPixel(sprintf('rgb(%d, %d, %d)', $r, $g, $b)));
 
         if ( ! $background->getImageAlphaChannel()) {
             $background->setImageAlphaChannel(\Imagick::ALPHACHANNEL_SET);

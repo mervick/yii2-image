@@ -512,7 +512,7 @@ abstract class Driver
     /**
      * Save image to file.
      * @param string $filename
-     * @param int|null $quality
+     * @param integer|null $quality
      */
     abstract protected function _save($filename, $quality);
 

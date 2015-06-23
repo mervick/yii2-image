@@ -9,6 +9,10 @@
         {
             "name": "Andrey Izman",
             "email": "izmanw@gmail.com"
+        },
+        {
+            "name": "Yuri Kileev",
+            "email": "kileev@gmail.com"
         }
     ],
     "require": {

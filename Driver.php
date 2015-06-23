@@ -513,6 +513,7 @@ abstract class Driver
      * Save image to file.
      * @param string $filename
      * @param integer|null $quality
+     * @return boolean
      */
     abstract protected function _save($filename, $quality);
 

@@ -349,7 +349,7 @@ abstract class Driver extends Object
      * @param boolean $fade_in true to fade in, false to fade out
      * @return Driver
      */
-    public function reflection($height = null, $opacity = 100, $fade_in = false)
+    final public function reflection($height = null, $opacity = 100, $fade_in = false)
     {
         if ($height === null || $height > $this->height)  {
             $height = $this->height;
@@ -385,7 +385,7 @@ abstract class Driver extends Object
      * @param integer $opacity Opacity of watermark: 1-100
      * @return Driver
      */
-    public function watermark(Driver $watermark, $offset_x = null, $offset_y = null, $opacity = 100)
+    final public function watermark(Driver $watermark, $offset_x = null, $offset_y = null, $opacity = 100)
     {
         if ($offset_x === null) {
             // Center the X offset
@@ -424,8 +424,8 @@ abstract class Driver extends Object
     abstract protected function _watermark(Driver $image, $offset_x, $offset_y, $opacity);
 
     /**
-     * Set the background color of an image. This is only useful for images
-     * with alpha transparency.
+     * Fill the background color of the image.
+     * This is useful for images with alpha transparency.
      *
      *     // Make the image background black
      *     $image->background('#000');
@@ -437,7 +437,7 @@ abstract class Driver extends Object
      * @param integer $opacity Background opacity: 0-100
      * @return Driver
      */
-    public function background($color, $opacity = 100)
+    final public function background($color, $opacity = 100)
     {
         if ($color{0} === '#') {
             $color = substr($color, 1);
@@ -463,7 +463,6 @@ abstract class Driver extends Object
      * @param integer $opacity
      */
     abstract protected function _background($r, $g, $b, $opacity);
-
 
     /**
      * Save the image. If the filename is omitted, the original image will
@@ -531,7 +530,7 @@ abstract class Driver extends Object
      * @param integer|null $quality
      * @return string
      */
-    public function render($type = null, $quality = null)
+    final public function render($type = null, $quality = null)
     {
         if ($type === null) {
             $type = image_type_to_extension($this->type, null);

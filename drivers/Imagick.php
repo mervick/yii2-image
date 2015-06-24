@@ -2,7 +2,6 @@
 
 namespace mervick\image\drivers;
 
-use mervick\image\Driver;
 use mervick\image\Image;
 use yii\base\InvalidParamException;
 
@@ -11,7 +10,7 @@ use yii\base\InvalidParamException;
  * @package mervick\image\drivers
  * @author Andrey Izman
  */
-class Imagick extends Driver
+class Imagick extends Image
 {
     /**
      * @var \Imagick
@@ -190,12 +189,12 @@ class Imagick extends Driver
 
     /**
      * Watermark.
-     * @param Driver $image
+     * @param Image $image
      * @param integer $offset_x
      * @param integer $offset_y
      * @param integer $opacity
      */
-    protected function _watermark(Driver $image, $offset_x, $offset_y, $opacity)
+    protected function _watermark(Image $image, $offset_x, $offset_y, $opacity)
     {
         $watermark = new \Imagick;
         $watermark->readImageBlob($image->render(), $image->filename);

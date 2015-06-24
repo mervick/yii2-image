@@ -7,12 +7,25 @@ use yii\base\InvalidParamException;
 use yii\base\Object;
 
 /**
- * Class Driver
+ * Class Image
  * @package mervick\image
  * @author Andrey Izman
  */
-abstract class Driver extends Object
+abstract class Image extends Object
 {
+    // Resizing constants
+    const WIDTH   = 'width';
+    const HEIGHT  = 'height';
+    const AUTO    = 'auto';
+    const INVERSE = 'inverse';
+    const PRECISE = 'precise';
+    const ADAPT   = 'adapt';
+    const CROP    = 'crop';
+
+    // Flipping constants
+    const HORIZONTAL = 'horizontal';
+    const VERTICAL   = 'vertical';
+
     /**
      * @var string file path
      */
@@ -42,6 +55,20 @@ abstract class Driver extends Object
      * @var string|null error
      */
     public $error;
+
+
+    /**
+     * Load image from file.
+     * @param string $file File path
+     * @param string|null $driver [optional] Driver class name
+     * @param boolean $throwErrors [optional] Show errors
+     * @return Image
+     */
+    public static function load($file, $driver = null, $throwErrors = true)
+    {
+        $driver = $driver ?: '\\mervick\\image\\drivers\\GD';
+        return new $driver($file, $throwErrors);
+    }
 
 
     /**
@@ -89,7 +116,7 @@ abstract class Driver extends Object
      * @param integer $width New width
      * @param integer $height New height
      * @param string $master [optional] Master dimension. Default is 'auto'
-     * @return Driver
+     * @return Image
      */
     final public function resize($width, $height, $master = Image::AUTO)
     {
@@ -204,7 +231,7 @@ abstract class Driver extends Object
     /**
      * Rotate the image.
      * @param integer $degrees
-     * @return Driver
+     * @return Image
      */
     final public function rotate($degrees)
     {
@@ -232,7 +259,7 @@ abstract class Driver extends Object
     /**
      * Flip the image along the horizontal or vertical axis.
      * @param string $direction May be Image::HORIZONTAL, Image::VERTICAL
-     * @return Driver
+     * @return Image
      */
     final public function flip($direction)
     {
@@ -252,7 +279,7 @@ abstract class Driver extends Object
      * @param integer  $height
      * @param integer|null $offset_x
      * @param integer|null $offset_y
-     * @return Driver
+     * @return Image
      */
     final public function crop($width, $height, $offset_x = null, $offset_y = null)
     {
@@ -313,7 +340,7 @@ abstract class Driver extends Object
     /**
      * Sharpen the image.
      * @param integer $amount
-     * @return Driver
+     * @return Image
      */
     final public function sharpen($amount)
     {
@@ -347,7 +374,7 @@ abstract class Driver extends Object
      * @param integer $height reflection height
      * @param integer $opacity reflection opacity: 0-100
      * @param boolean $fade_in true to fade in, false to fade out
-     * @return Driver
+     * @return Image
      */
     final public function reflection($height = null, $opacity = 100, $fade_in = false)
     {
@@ -379,13 +406,13 @@ abstract class Driver extends Object
      *     $mark = Image::factory('upload/watermark.png');
      *     $image->watermark($mark, true, true);
      *
-     * @param Driver $watermark
+     * @param Image $watermark
      * @param integer $offset_x Offset from the left
      * @param integer $offset_y Offset from the top
      * @param integer $opacity Opacity of watermark: 1-100
-     * @return Driver
+     * @return Image
      */
-    final public function watermark(Driver $watermark, $offset_x = null, $offset_y = null, $opacity = 100)
+    final public function watermark(Image $watermark, $offset_x = null, $offset_y = null, $opacity = 100)
     {
         if ($offset_x === null) {
             // Center the X offset
@@ -416,12 +443,12 @@ abstract class Driver extends Object
 
     /**
      * Add a watermark to the image.
-     * @param Driver $image
+     * @param Image $image
      * @param integer $offset_x
      * @param integer $offset_y
      * @param integer $opacity
      */
-    abstract protected function _watermark(Driver $image, $offset_x, $offset_y, $opacity);
+    abstract protected function _watermark(Image $image, $offset_x, $offset_y, $opacity);
 
     /**
      * Fill the background color of the image.
@@ -435,7 +462,7 @@ abstract class Driver extends Object
      *
      * @param string $color Hexadecimal color
      * @param integer $opacity Background opacity: 0-100
-     * @return Driver
+     * @return Image
      */
     final public function background($color, $opacity = 100)
     {

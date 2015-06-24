@@ -2,7 +2,6 @@
 
 namespace mervick\image\drivers;
 
-use mervick\image\Driver;
 use mervick\image\Image;
 use yii\base\InvalidParamException;
 
@@ -11,7 +10,7 @@ use yii\base\InvalidParamException;
  * @package mervick\image\drivers
  * @author Andrey Izman
  */
-class GD extends Driver
+class GD extends Image
 {
     /**
      * @var resource Image resource
@@ -280,12 +279,12 @@ class GD extends Driver
 
     /**
      * Watermark.
-     * @param Driver $watermark
+     * @param Image $watermark
      * @param integer $offset_x
      * @param integer $offset_y
      * @param integer $opacity
      */
-    protected function _watermark(Driver $watermark, $offset_x, $offset_y, $opacity)
+    protected function _watermark(Image $watermark, $offset_x, $offset_y, $opacity)
     {
         $overlay = imagecreatefromstring($watermark->render());
         imagesavealpha($overlay, true);

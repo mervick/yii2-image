@@ -10,7 +10,7 @@ Add to your composer.json:
 ```php
 "require": 
 {
-    "mervick/yii2-image": "~1.*"
+    "mervick/yii2-image": "~1.0"
 }
 ```
 after that exec `php composer.phar update`  

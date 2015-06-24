@@ -23,7 +23,7 @@ class Component extends \yii\base\Component
     /**
      * Load image from file
      * @param string $file
-     * @return Driver
+     * @return Image
      */
     public function load($file)
     {

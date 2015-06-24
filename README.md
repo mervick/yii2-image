@@ -17,7 +17,7 @@ after that exec `php composer.phar update`
 
 ## Usage 
 
-### Simple:
+### Simple
 ```php
 
 $driver = \mervick\image\drivers\GD::classname(); // or `\mervick\image\drivers\Imagick::classname()`
@@ -28,9 +28,9 @@ $image->save();
 // or $image->save('@path/to/file2.png', $quality);
 
 ```
-### Component:
+### Using component
 
-configuration, `main.php`:
+configuration in `main.php`:
 ```php
 'components' => [
     'image' => [
@@ -39,7 +39,7 @@ configuration, `main.php`:
     ],
 ],
 ```
-usage:
+usage
 ```php
 /* @var $image \mervick\image\Driver */
 $image = Yii::$app->image->load('@path/to/file');
@@ -47,8 +47,97 @@ $image->flip('vertical')->save('@path/to/file2.jpeg', $quality);
 
 ```
 
-### Resize constants:
+## Api
 ```php
+/**
+ * Resize the image to the given size.
+ * @param integer $width New width
+ * @param integer $height New height
+ * @param string $master [optional] Master dimension. Default is 'auto'
+ * @return Driver
+ */
+public function resize($width, $height, $master = Image::AUTO);
+
+/**
+ * Rotate the image.
+ * @param integer $degrees
+ * @return Driver
+ */
+public function rotate($degrees);
+
+/**
+ * Flip the image along the horizontal or vertical axis.
+ * @param string $direction May be Image::HORIZONTAL, Image::VERTICAL
+ * @return Driver
+ */
+public function flip($direction);
+
+/**
+ * Crop the image.
+ * @param integer $width
+ * @param integer  $height
+ * @param integer|null $offset_x
+ * @param integer|null $offset_y
+ * @return Driver
+ */
+public function crop($width, $height, $offset_x = null, $offset_y = null);
+
+/**
+ * Sharpen the image.
+ * @param integer $amount
+ * @return Driver
+ */
+public function sharpen($amount);
+
+/**
+ * Add a reflection to the image.
+ * @param integer $height reflection height
+ * @param integer $opacity reflection opacity: 0-100
+ * @param boolean $fade_in true to fade in, false to fade out
+ * @return Driver
+ */
+public function reflection($height = null, $opacity = 100, $fade_in = false);
+
+/**
+ * Add a watermark to the image with a specified opacity.
+ * @param Driver $watermark
+ * @param integer $offset_x Offset from the left
+ * @param integer $offset_y Offset from the top
+ * @param integer $opacity Opacity of watermark: 1-100
+ * @return Driver
+ */
+public function watermark(Driver $watermark, $offset_x = null, $offset_y = null, $opacity = 100);
+ 
+/**
+ * Fill the background color of the image.
+ * @param string $color Hexadecimal color
+ * @param integer $opacity Background opacity: 0-100
+ * @return Driver
+ */
+public function background($color, $opacity = 100);
+
+/**
+ * Save the image. If the filename is omitted, the original image will
+ * be overwritten.
+ * @param string|null $filename Image file name
+ * @param integer|null $quality Quality 1-100 for JPEG, 0-9 for PNG
+ * @return boolean
+ * @throws \ErrorException
+ */
+public function save($filename = null, $quality = null);
+
+/**
+ * Render the image.
+ * @param string|null $type
+ * @param integer|null $quality
+ * @return string binary string
+ */
+public function render($type = null, $quality = null);
+```
+
+### Image constants
+```php
+    // resize contants
     const WIDTH   = 'width';
     const HEIGHT  = 'height';
     const AUTO    = 'auto';
@@ -56,15 +145,14 @@ $image->flip('vertical')->save('@path/to/file2.jpeg', $quality);
     const PRECISE = 'precise';
     const ADAPT   = 'adapt';
     const CROP    = 'crop';
-```
-###Flipping constants
-```php
+    
+    // Flipping constants 
     const HORIZONTAL = 'horizontal';
     const VERTICAL   = 'vertical';
 ```
 
 ## License
-BSD-3-Clause
+[BSD-3-Clause](http://opensource.org/licenses/BSD-3-Clause)
 
 
 

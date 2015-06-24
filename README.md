@@ -19,9 +19,8 @@ after that exec `php composer.phar update`
 
 ### Simple
 ```php
-
 $driver = \mervick\image\drivers\GD::classname(); // or `\mervick\image\drivers\Imagick::classname()`
-/* @var $image \mervick\image\drivers\GD */
+/* @var $image \mervick\image\Image */
 $image = \mervick\image\Image::load('@path/to/file', $driver);
 $image->resize($width, $height, 'crop');
 $image->save(); 
@@ -41,7 +40,7 @@ configure in `main.php`:
 ```
 usage
 ```php
-/* @var $image \mervick\image\Driver */
+/* @var $image \mervick\image\Image */
 $image = Yii::$app->image->load('@path/to/file');
 $image->flip('vertical')->save('@path/to/file2.jpeg', $quality);
 
@@ -54,21 +53,21 @@ $image->flip('vertical')->save('@path/to/file2.jpeg', $quality);
  * @param integer $width New width
  * @param integer $height New height
  * @param string $master [optional] Master dimension. Default is 'auto'
- * @return Driver
+ * @return Image
  */
 public function resize($width, $height, $master = Image::AUTO);
 
 /**
  * Rotate the image.
  * @param integer $degrees
- * @return Driver
+ * @return Image
  */
 public function rotate($degrees);
 
 /**
  * Flip the image along the horizontal or vertical axis.
  * @param string $direction May be Image::HORIZONTAL, Image::VERTICAL
- * @return Driver
+ * @return Image
  */
 public function flip($direction);
 
@@ -78,14 +77,14 @@ public function flip($direction);
  * @param integer  $height
  * @param integer|null $offset_x
  * @param integer|null $offset_y
- * @return Driver
+ * @return Image
  */
 public function crop($width, $height, $offset_x = null, $offset_y = null);
 
 /**
  * Sharpen the image.
  * @param integer $amount
- * @return Driver
+ * @return Image
  */
 public function sharpen($amount);
 
@@ -94,25 +93,25 @@ public function sharpen($amount);
  * @param integer $height reflection height
  * @param integer $opacity reflection opacity: 0-100
  * @param boolean $fade_in true to fade in, false to fade out
- * @return Driver
+ * @return Image
  */
 public function reflection($height = null, $opacity = 100, $fade_in = false);
 
 /**
  * Add a watermark to the image with a specified opacity.
- * @param Driver $watermark
+ * @param Image $watermark
  * @param integer $offset_x Offset from the left
  * @param integer $offset_y Offset from the top
  * @param integer $opacity Opacity of watermark: 1-100
- * @return Driver
+ * @return Image
  */
-public function watermark(Driver $watermark, $offset_x = null, $offset_y = null, $opacity = 100);
+public function watermark(Image $watermark, $offset_x = null, $offset_y = null, $opacity = 100);
  
 /**
  * Fill the background color of the image.
  * @param string $color Hexadecimal color
  * @param integer $opacity Background opacity: 0-100
- * @return Driver
+ * @return Image
  */
 public function background($color, $opacity = 100);
 

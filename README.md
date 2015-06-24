@@ -30,7 +30,7 @@ $image->save();
 ```
 ### Using component
 
-configuration in `main.php`:
+configure in `main.php`:
 ```php
 'components' => [
     'image' => [

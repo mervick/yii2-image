@@ -525,7 +525,7 @@ abstract class Image extends Object
                 throw new \ErrorException(sprintf('Enable to write file: %s', $filename));
             }
         } else {
-            $path = realpath(pathinfo($filename, PATHINFO_DIRNAME));
+            $path = pathinfo($filename, PATHINFO_DIRNAME);
             if (!is_dir($path)) {
                 if (!@mkdir($path, 0777, true)) {
                     throw new \ErrorException(sprintf('Unable to create dir: %s', $path));

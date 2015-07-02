@@ -182,7 +182,7 @@ class GD extends Image
      */
     protected function _rotate($degrees)
     {
-        $transparent = imagecolorallocatealpha($this->image, 0, 255, 0, 127);
+        $transparent = imagecolorallocatealpha($this->image, 0, 0, 0, 127);
         $image = imagerotate($this->image, 360 - $degrees, $transparent, true);
         imagesavealpha($image, true);
         $width = imagesx($image);

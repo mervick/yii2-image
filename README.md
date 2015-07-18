@@ -1,4 +1,5 @@
 # yii2-image 
+[![Analytics](https://ga-beacon.appspot.com/UA-65295275-1/yii2-image)](https://github.com/igrigorik/ga-beacon)
 
 Yii2 Framefork Extension for Image Manipulation.  
 Forked from [yurkinx/yii2-image](https://github.com/yurkinx/yii2-image)
